@@ -43,6 +43,12 @@ def index():
     return render_template("index.html", feature_meta=feature_meta)
 
 
+@app.route("/signup")
+def signup():
+    return "Signup page"
+
+
+
 @app.route("/auth")
 def user_login():
     return "User authentication page"
