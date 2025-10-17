@@ -20,27 +20,33 @@ for feat in feature_list:
     if feat in label_encoders:
         # categorical -> dropdown
         classes = [str(x) for x in label_encoders[feat].classes_.tolist()]
-        feature_meta.append({
-            "name": feat,
-            "field": field_name,
-            "type": "categorical",
-            "options": classes
-        })
+        feature_meta.append(
+            {
+                "name": feat,
+                "field": field_name,
+                "type": "categorical",
+                "options": classes,
+            }
+        )
     else:
         # numeric -> number input
-        feature_meta.append({
-            "name": feat,
-            "field": field_name,
-            "type": "numeric",
-            "options": None
-        })
+        feature_meta.append(
+            {"name": feat, "field": field_name, "type": "numeric", "options": None}
+        )
 
 app = Flask(__name__)
-app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+
 
 @app.route("/", methods=["GET"])
 def index():
     return render_template("index.html", feature_meta=feature_meta)
+
+
+@app.route("/login")
+def login():
+    return "Login page"
+
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -75,6 +81,7 @@ def predict():
         pred_fmt = str(pred)
     return render_template("result.html", prediction=pred_fmt)
 
+
 # Optional JSON API
 @app.route("/api/predict", methods=["POST"])
 def api_predict():
@@ -101,6 +108,7 @@ def api_predict():
     X = np.array(row).reshape(1, -1)
     pred = model.predict(X)[0]
     return {"prediction": float(pred)}
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
